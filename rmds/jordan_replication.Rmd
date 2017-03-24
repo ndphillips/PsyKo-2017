@@ -1,0 +1,115 @@
+---
+title: "Jordan_Replication"
+author: "Nathaniel Phillips"
+date: "23 March 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE, message = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Load Libraries
+
+```{r, message = FALSE}
+library(dplyr)
+library(papaja)
+```
+
+
+### Load Data
+
+```{r}
+# Data are in tab--delimited text files created from the original Excel File on OSF at:  https://osf.io/pszjz/
+
+s1 <- read.table("https://raw.githubusercontent.com/ndphillips/PsyKo-2017/master/data/jordan_s1.txt", sep = "\t", header = TRUE, stringsAsFactors = FALSE)
+s2 <- read.table("https://raw.githubusercontent.com/ndphillips/PsyKo-2017/master/data/jordan_s2.txt", sep = "\t", header = TRUE, stringsAsFactors = FALSE)
+```
+
+### Clean Data
+
+```{r}
+s1 <- s1 %>% mutate(
+  likeall = (likework + likeromantic + likeacademic + likedrugs) / 4,
+  gender = ifelse(gender == 1, "male", "female"),
+  goodinfo = ifelse(goodinfo == 1, "Good", "None"),
+  condemn = ifelse(condemn == 1, "Target", "Other")) %>%
+  filter(percCorrect == 1 & 
+           is.finite(age))    # As recommended by the main study author in an email
+
+s2 <- s2 %>% mutate(
+  likeall = (likework + likeromantic + likeacademic + likedrugs) / 4,
+  gender = ifelse(gender == 1, "male", "female"),
+  direct = ifelse(direct == 1, "Direct", "Moral"),
+  signal = ifelse(signal == 1, "Target", "Other")) %>%
+  filter(percCorrect == 1)
+```
+
+## Study 1
+
+```{r}
+# Show structure of study 1 data
+# Should have 619 participants
+str(s1)
+```
+
+### Barplot
+
+```{r}
+papaja::apa_barplot(data = s1, 
+                    dv = "likeall", 
+                    factors = c("goodinfo", "condemn"), 
+                    id = "id", args_legend = list(x = "topleft"), ylim = c(1, 7))
+```
+
+
+### ANOVA
+
+```{r}
+# Conduct an ANOVA on likeall as a function of goodinfo and condemn
+
+# According to the paper on p. 359
+#  Information main effect, F(1, 165) = 137.93, p < .001
+#  Condemn main effect, F(1, 165) = 13.20, p < .001
+#  Interaction: F(1, 165) = 8.51, p = .004
+
+s1.aov <- aov(likeall ~ goodinfo * condemn, 
+              data = s1)
+
+summary(s1.aov)
+```
+
+## Study 2
+
+```{r}
+# Show structure of study 2 data
+# Should have 803 participants
+str(s2)
+```
+
+### Barplot
+
+```{r}
+papaja::apa_barplot(data = s2, 
+                    dv = "likeall", 
+                    factors = c("signal", "direct"), 
+                    id = "id", args_legend = list(x = "topleft"), ylim = c(1, 7))
+```
+
+### ANOVA
+
+```{r}
+# Conduct an ANOVA on likeall as a function of goodinfo and condemn
+
+# According to paper on page 361:
+#   Signal type, F(1, 799) = 9.92, p = .002
+#   Signaler:  F(1,799) = 198.62, p < .001
+#   Interaction: F(1, 799) = 14.01, p < .001
+
+s2.aov <- aov(likeall ~ direct * signal, 
+              data = s2)
+
+summary(s2.aov)
+```
+
+

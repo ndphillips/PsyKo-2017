@@ -1,0 +1,174 @@
+---
+title             : "Why do we hate hypocrites? "
+shorttitle        : "Hypocrites"
+
+author: 
+  - name          : "First Author"
+    affiliation   : "1"
+    corresponding : yes    # Define only one corresponding author
+    address       : "Postal address"
+    email         : "my@email.com"
+  - name          : "Ernst-August Doelle"
+    affiliation   : "1,2"
+
+affiliation:
+  - id            : "1"
+    institution   : "Wilhelm-Wundt-University"
+  - id            : "2"
+    institution   : "Konstanz Business School"
+
+author_note: >
+  Complete departmental affiliations for each author (note the indentation, if you start a new paragraph).
+
+  Enter author note here.
+
+abstract: >
+  Why do people judge hypocrites, who condemn immoral behaviors that they in fact engage in, so negatively? We propose that hypocrites are disliked because their condemnation sends a false signal about their personal conduct, deceptively suggesting that they behave morally. We show that verbal condemnation signals moral goodness (Study 1) and does so even more convincingly than directly stating that one behaves morally (Study 2). We then demonstrate that people judge hypocrites negatively—even more negatively than people who directly make false statements about their morality (Study 3). Finally, we show that “honest” hypocrites—who avoid false signaling by admitting to committing the condemned transgression—are not perceived negatively even though their actions contradict their stated values (Study 4). Critically, the same is not true of hypocrites who engage in false signaling but admit to unrelated transgressions (Study 5). Together, our results support a false-signaling theory of hypocrisy
+  
+keywords          : "moral psychology, condemnation, vignettes, deception, social signaling, open data, open materials"
+wordcount         : "X"
+
+bibliography      : ["r-references.bib"]
+
+figsintext        : no
+figurelist        : no
+tablelist         : no
+footnotelist      : no
+lineno            : no
+
+lang              : "english"
+class             : "man"
+output            : papaja::apa6_pdf
+---
+
+```{r message = FALSE, warning = FALSE}
+library("papaja")
+library(dplyr)
+library(yarrr)
+library(rprojroot)
+
+setwd(rprojroot::is_rstudio_project$find_file())
+
+# Load data
+
+# Participant raw response data
+s1 <- read.table("data/jordan_s1.txt", sep = "\t", header = TRUE, stringsAsFactors = FALSE)
+s2 <- read.table("data/jordan_s2.txt", sep = "\t", header = TRUE, stringsAsFactors = FALSE)
+s3 <- read.table("data/jordan_s3.txt", sep = "\t", header = TRUE, stringsAsFactors = FALSE)
+s4 <- read.table("data/jordan_s4.txt", sep = "\t", header = TRUE, stringsAsFactors = FALSE)
+s5 <- read.table("data/jordan_s5.txt", sep = "\t", header = TRUE, stringsAsFactors = FALSE)
+
+# Open ended question data
+s1.open <- read.table("data/jordan_s1_open.txt", sep = "\t", header = TRUE, quote = "", stringsAsFactors = FALSE)
+s2.open <- read.table("data/jordan_s2_open.txt", sep = "\t", header = TRUE,  quote = "",stringsAsFactors = FALSE)
+s3.open <- read.table("data/jordan_s3_open.txt", sep = "\t", header = TRUE,  quote = "",stringsAsFactors = FALSE)
+s4.open <- read.table("data/jordan_s4_open.txt", sep = "\t", header = TRUE,  quote = "",stringsAsFactors = FALSE)
+s5.open <- read.table("data/jordan_s5_open.txt", sep = "\t", header = TRUE,  quote = "",stringsAsFactors = FALSE)
+
+
+# -------------
+# Data cleaning
+# --------------
+
+s1 <- s1 %>% mutate(
+    gender = ifelse(gender == 1, "male", "female"),
+    goodinfo = ifelse(goodinfo == 1, "Good", "None"),
+    condemn = ifelse(condemn == 1, "Target", "Other")) %>%
+    filter(percCorrect == 1 & 
+           is.finite(age))    # As recommended by the main study author in an email
+
+s2 <- s2 %>% mutate(
+  gender = ifelse(gender == 1, "male", "female"),
+  direct = ifelse(direct == 1, "Direct", "Moral"),
+  signal = ifelse(signal == 1, "Target", "Other")) %>%
+  filter(percCorrect == 1)
+
+s3 <- s3 %>% mutate(
+  gender = ifelse(gender == 1, "male", "female"))
+
+s4 <- s4 %>% mutate(
+  gender = ifelse(gender == 1, "male", "female"))
+
+s5 <- s5 %>% mutate(
+  gender = ifelse(gender == 1, "male", "female"))
+
+
+# A function to extract means and standard deviations from a vector
+
+print.meansd <- function(x, rounding = 2) {
+  
+  output <- paste0("M = ", round(mean(x), rounding), ", sd = ", round(sd(x), rounding))
+  
+  return(output)
+  
+}
+```
+
+
+Consider the hypocrite—someone who condemns the moral failings of other people but behaves badly him- or herself. Many commentators have remarked on the “peculiarly repulsive” nature of hypocrisy (Shklar, 1984, p. 57). The degree to which hypocrites are disliked cannot be explained by their transgressions alone: What makes hypocrites especially bad is that they both commit a transgression and condemn it. But why is this combination so objectionable? After all, speaking out against immorality is normally seen as laudable. It enforces norms and encourages moral behavior (Berkowitz & Walker, 1967; Feinberg, Willer, & Schultz, 2014; Feinberg, Willer, Stellar, & Keltner, 2012), such that failing to condemn transgressions has been characterized as secondorder free-riding (Yamagishi, 1986). Arguably, then, people should not be so resentful toward hypocrites: They may fail to achieve their moral aspirations, but at least they oppose bad behavior
+
+
+# Method
+
+## Design
+
+To test these predictions, we presented subjects with vignettes and asked them to evaluate target characters in the vignettes. In a 2 × 2 between-subjects design, we manipulated whether the targets engaged in moral condemnation or not and whether subjects had direct information about the targets’ moral behavior or not. We predicted that subjects would evaluate targets who engaged in moral condemnation more positively than those who did not, but only in the absence of direct information about the targets’ moral behavior.
+
+## Participants
+
+Study 1 contained `r nrow(s1)` participants.
+
+## Materials
+
+## Procedure
+
+In each of our vignettes, we asked subjects to imagine that they belonged to a social group in which a particular moral transgression was possible (e.g., a track team whose members might use forbidden performance-enhancing drugs). Subjects were then told about two members of the social group: the target (whom subjects would later evaluate) and the other person (whom subjects would not evaluate), both of whom were described neutrally (not using these terms).
+
+## Data analysis
+We used `r cite_r("r-references.bib")` for all our analyses. Raw data are available at the Open Science Framework at https://osf.io/pszjz/
+
+# Results
+
+```{r}
+s1.aov <- aov(sumtotal ~ goodinfo * condemn, 
+              data = s1)
+
+s1.goodinfo.none.ttest <- t.test(sumtotal ~ condemn, data = subset(s1, goodinfo == "None"))
+s1.goodinfo.good.ttest <- t.test(sumtotal ~ condemn, data = subset(s1, goodinfo == "Good"))
+```
+
+
+To test our predictions, we conducted a 2 (condemnation condition: target condemns vs. other condemns) × 2 (information condition: good information vs. no information) analysis of variance (ANOVA) predicting mean positive evaluations of the targets across the vignettes (see Figure \@ref(fig:figure1)). We found a significant main effect of information condition `r papaja::apa_print(s1.aov)$full_result$goodinfo`. subjects evaluated targets more positively in the good-information condition (`r print.meansd(subset(s1, goodinfo == "Good")$sumtotal)`), than in the no-information condition (`r print.meansd(subset(s1, goodinfo == "None")$sumtotal)`). This result served as a manipulation check, demonstrating that direct positive information about the target’s moral behavior was perceived as a clear indication of moral goodness.
+
+We also found a significant main effect of condemnation condition, `r papaja::apa_print(s1.aov)$full_result$condemn` subjects evaluated targets more positively when the target engaged in condemnation (`r print.meansd(subset(s1, condemn == "Target")$sumtotal)`) than when the other person engaged in condemnation (`r print.meansd(subset(s1, condemn == "Other")$sumtotal)`). This result confirmed our hypothesis that moral condemnation serves as a signal of moral goodness.
+
+Finally, we found a significant interaction, `r papaja::apa_print(s1.aov)$full_result$goodinfo_condemn`; the target’s use of condemnationhad a larger effect in the no-information condition than in the good-information condition. Specifically, when subjects were given no information about the target’s behavior, they evaluated the target significantly more positively when he or she condemned the transgression (`r print.meansd(subset(s1, goodinfo == "None" & condemn == "Target")$sumtotal)`) than when the other party condemned the transgression (`r print.meansd(subset(s1, goodinfo == "None" & condemn == "Other")$sumtotal)`), `r papaja::apa_print(s1.goodinfo.none.ttest)$full_result`. 
+
+However, in the good-information condition, we found no significant difference between the target-condemns condition (`r print.meansd(subset(s1, goodinfo == "Good" & condemn == "Target")$sumtotal)`) and the other-condemns condition (`r print.meansd(subset(s1, goodinfo == "Good" & condemn == "Other")$sumtotal)`),  `r papaja::apa_print(s1.goodinfo.good.ttest)$full_result`
+
+This result confirmed our hypothesis that observers rely on a person’s statements of condemnation as a signal of moral goodness only when they lack direct information about the person’s moral behavior.
+
+We note that the null effect of the target expressing condemnation in the good-information condition does not appear to be a ceiling effect. In the good-information condition, the mean composite evaluation (`r round(mean(subset(s1, goodinfo == "Good")$sumtotal), 2)`) was substantially below the scale’s ceiling (7), and subjects rarely used the ceiling value (only `r round(mean(unlist(s1[,8:23]) == 7, na.rm = TRUE), 2) * 100`\% of responses to the evaluative questions were a “7”)
+
+```{r figure1, fig.cap = "Results from Study 1: mean composite evaluation of the targets as a function of condemnation condition and information condition. Error bars represent 95% Bayesian highest density intervals."}
+pirateplot(sumdo ~ condemn + goodinfo, 
+           data = s1, 
+           theme = 2, 
+           ylim = c(1, 7), 
+           cap.beans = TRUE)
+```
+
+
+# Discussion
+
+Really great discussion
+
+\newpage
+
+# References
+```{r create_r-references}
+r_refs(file = "r-references.bib")
+```
+
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.5in}
