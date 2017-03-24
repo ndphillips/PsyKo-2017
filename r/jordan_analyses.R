@@ -1,9 +1,34 @@
-# Jordan et al.
-# Study 1
+# Replicating the analysis from Jordan et al.
+# Jordan, J. J., Sommers, R., Bloom, P., & Rand, D. G. (2017). Why Do We Hate Hypocrites? Evidence for a Theory of False Signaling.
+# http://journals.sagepub.com/doi/full/10.1177/0956797616685771
+#
+# Original data obtained from: https://osf.io/pszjz/
+#
+# Abstract
+# Why do people judge hypocrites, who condemn immoral behaviors that they in fact engage in, so negatively? 
+# We propose that hypocrites are disliked because their condemnation sends a false signal about their personal conduct, 
+# deceptively suggesting that they behave morally. We show that verbal condemnation signals moral goodness (Study 1) and 
+# does so even more convincingly than directly stating that one behaves morally (Study 2). We then demonstrate that 
+# people judge hypocrites negatively — even more negatively than people who directly make false statements about their 
+# morality (Study 3). Finally, we show that “honest” hypocrites — who avoid false signaling by admitting to committing 
+# the condemned transgression — are not perceived negatively even though their actions contradict their stated values (Study 4). 
+# Critically, the same is not true of hypocrites who engage in false signaling but admit to unrelated transgressions (Study 5). 
+# Together, our results support a false-signaling theory of hypocrisy.
 
-# -------------
+# -------------------------------------------------
 # Load libraries
-# --------------
+#  If they aren't installed on your computer, you must install them with install.packages().
+#  E.g.; install.packages("yarrr")
+# --------------------------------------------------
+
+# install.packages(yarrr)          # For R piratery
+# install.packages(BayesFactor)    # Bayesian analyses
+# install.packages(tidyverse)      # Data wrangling
+# install.packages(tm)             # Natural language processing
+# install.packages(wordcloud)      # Creating wordclouds
+# install.packages(stringr)        # Text management functions
+# install.packages(rprojroot)      # For working directory management
+# install.packages(papaja)         # For apa analyses
 
 library(yarrr)          # For R piratery
 library(BayesFactor)    # Bayesian analyses
@@ -12,19 +37,23 @@ library(tm)             # Natural language processing
 library(wordcloud)      # Creating wordclouds
 library(stringr)        # Text management functions
 library(rprojroot)      # For working directory management
+library(papaja)         # For apa analyses
 
-# -------------
+# -------------------------------------------------
 # Set working directory
-# --------------
+# This will set the working directory to the directory containing an .Rproj file
+#  (If you're not working in a project, just delete this)
+# --------------------------------------------------
 
 setwd(rprojroot::is_rstudio_project$find_file())
 
-# -------------
+# -------------------------------------------------
 # Load Data
-# --------------
+# --------------------------------------------------
 
 online <- TRUE
 
+# If online, get the data from github
 if(online) {
   
   # Participant raw response data
@@ -43,7 +72,7 @@ if(online) {
   
 }
 
-# If the data is on your computer, it must be in a folder called data
+# If not online, read the data from a folder called data
 if(online == FALSE) {
 
 # Participant raw response data
@@ -62,9 +91,12 @@ s5.open <- read.table("data/jordan_s5_open.txt", sep = "\t", header = TRUE,  quo
 
 }
 
-# -------------
+# -------------------------------------------------
 # Data cleaning
-# --------------
+# --------------------------------------------------
+
+# Change gender from 1 and 2 to "male" and "female"
+# Change goodinfo and condemn to character
 
 s1 <- s1 %>% mutate(
     gender = ifelse(gender == 1, "male", "female"),
@@ -79,19 +111,9 @@ s2 <- s2 %>% mutate(
   signal = ifelse(signal == 1, "Target", "Other")) %>%
   filter(percCorrect == 1)
 
-s3 <- s3 %>% mutate(
-  gender = ifelse(gender == 1, "male", "female"))
-
-s4 <- s4 %>% mutate(
-  gender = ifelse(gender == 1, "male", "female"))
-
-s5 <- s5 %>% mutate(
-  gender = ifelse(gender == 1, "male", "female"))
- 
-
-# -------------
+# -------------------------------------------------
 # STUDY 1
-# --------------
+# --------------------------------------------------
 
 # Explore study 1
 
@@ -118,8 +140,8 @@ table(s1$gender)
 # What percent were male? (According to the article, it's 59%)
 mean(s1$gender == "male")
 
-# What percent of comprehension questions did the median participant get correct?
-median(s1$percCorrect)
+# How did participants do on the comprehension questions?
+table(s1$percCorrect)
 
 # How old was the oldest participant?
 # Your turn!
@@ -132,21 +154,40 @@ median(s1$percCorrect)
 # Grouped Descriptive Statistics
 # ----------------------
 
-# What was the mean sumtotal rating for each group?
+# What was the mean and sd sumtotal rating for each group?
 
-s1.sumtotal.summary <- s1 %>% 
-              group_by(goodinfo, condemn) %>%
-              summarise(
-                        sumtotal.mean = mean(sumtotal, na.rm = TRUE),
-                        sumtotal.sd = sd(sumtotal, na.rm = TRUE)
-                        )
+s1.sumtotal.summary <- s1 %>%                               # From the study 1 data...
+    group_by(goodinfo, condemn) %>%                         # Group results by goodinfo and condemn
+    summarise(
+              sumtotal.mean = mean(sumtotal, na.rm = TRUE), #  mean sumtotal
+              sumtotal.sd = sd(sumtotal, na.rm = TRUE),     #  sd of sumtotal
+              N = n()                                       #  N = number of observations
+              )                                      
 
+# Print the results
 s1.sumtotal.summary
 
+
+# YOUR TURN!
+# What was the mean and sd of age for each group?
+
+
+
+
+
 # ----------------------
-# Plot
+# Plotting
 # ----------------------
 
+
+# Histogram of sumtotal scores
+
+hist(x = s1$sumtotal, 
+     main = "sumtotal", 
+     yaxt = "n", 
+     ylab = "")
+
+# Scatterplot of age and sumtotal
 plot(x = s1$age,
      y = s1$sumtotal,
      pch = 16, 
@@ -157,18 +198,34 @@ plot(x = s1$age,
 abline(lm(sumtotal ~ age, data = s1), 
        lty = 2, col = "steelblue", lwd = 2)
 
+# Barplot of sumtotal by goodinfo and condemn
 
 papaja::apa_barplot(data = s1, 
-                    dv = "sumtotal", 
-                    factors = c("goodinfo", "condemn"), 
-                    id = "id", args_legend = list(x = "topleft"), ylim = c(1, 7))
+                    dv = "sumtotal",                       # DV is sumtotal
+                    factors = c("goodinfo", "condemn"),    # group by goodinfo and condemn
+                    id = "id",                             # subjects are defined by id
+                    args_legend = list(x = "topleft"),     # Put legend on top left
+                    ylim = c(1, 7))
 
 
+# YOUR TURN!!!
+# Create a barplot showing the distribution of sumdo by goodinfo and condemn
+
+
+
+
+
+
+
+# Pirateplot of sumtotal by condemn and goodinfo
 pirateplot(sumdo ~ condemn + goodinfo, 
            data = s1, 
-           theme = 2, 
+           theme = 3, 
            ylim = c(1, 7), 
            cap.beans = TRUE)
+
+
+
 
 
 # ----------------------
@@ -176,10 +233,12 @@ pirateplot(sumdo ~ condemn + goodinfo,
 # ----------------------
 
 # Do men give different liking ratings than women?
-t.test(sumtotal ~ gender, data = s1)
+t.test(sumtotal ~ gender, 
+       data = s1)
 
 # Is there a correlation between age and liking
-cor.test(~ sumtotal + age, data = s1)
+cor.test(~ sumtotal + age, 
+         data = s1)
 
 # ----------------------
 # ANOVA
@@ -267,7 +326,8 @@ s1.longbf
 
 s1.corpus <- VCorpus(VectorSource(unlist(s1.open)))
 s1.corpus <- tm_map(s1.corpus, content_transformer(tolower))
-words_to_remove <- c("said","from","what","was","game", "you", "your", "the", "and", "but", "told","over","more","other","have","last","with","this","that","such","when","been","says","will","also","where","why","would","today")
+words_to_remove <- c("said","from","what","was","game", "you", "your", "the", "and", "but", "told","over","more","other","have",
+                     "last","with","this","that","such","when","been","says","will","also","where","why","would","today")
 s1.corpus <- tm_map(s1.corpus, removeWords, words_to_remove)
 
 wordcloud(s1.corpus)
@@ -277,6 +337,7 @@ wordcloud(s1.corpus, min.freq = 10)
 
 # ----------------------
 # Simulation
+# If there were only 25 participants per condition, would we still find an interaction?
 # ----------------------
 
 nsim <- 1000
@@ -383,6 +444,7 @@ wordcloud(s2.corpus, min.freq = 100)
 
 # ----------------------
 # Simulation
+# If there were only 25 participants per condition, would we still find an interaction?
 # ----------------------
 
 nsim <- 1000
@@ -416,54 +478,5 @@ plot(x = seq(-.3, 1, .1),
 grid()
 segments(0, 0, 0, mean(s2.int.values > 0), lty = 2)
 points(0, mean(s2.int.values > 0), pch = 16, col = "green")
-
-
-# ------------
-# STUDY 3
-# ------------
-
-# Conduct an ANOVA on sumtotal as a function of goodinfo and condemn
-papaja::apa_barplot(data = s3, 
-                    dv = "overall", 
-                    factors = c("condition"), 
-                    id = "id", args_legend = list(x = "topleft"), ylim = c(0, 50))
-
-
-# Conduct an ANOVA on sumtotal as a function of goodinfo and condemn
-pirateplot(overall ~ condition, 
-           data = s3, 
-           theme = 2, 
-           cap.beans = TRUE)
-
-
-# ----------------------
-# ANOVA
-# ----------------------
-
-# Conduct an ANOVA on sumtotal as a function of goodinfo and condemn
-s3.aov <- aov(overall ~ condition,
-              data = s3)
-
-summary(s3.aov)
-
-
-# ----------------------
-# Bayesian
-# ----------------------
-
-s3.bf <- BayesFactor::generalTestBF(formula = overall ~ condition,
-                                    data = subset(s3, is.finite(overall)))
-
-
-s3.post <- posterior(s3.bf, iterations = 1e5, index = 1)
-plot(s3.post)
-
-
-
-
-# -------------
-# Simulation
-# ------------
-
 
 

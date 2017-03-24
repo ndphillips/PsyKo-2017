@@ -1,0 +1,12 @@
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[htbp]
+\centering
+\includegraphics{jordan_apa_files/figure-latex/figure1-1.pdf}
+\caption{\label{fig:figure1}Results from Study 1: mean composite evaluation
+of the targets as a function of condemnation condition and information
+condition. Error bars represent 95\% Bayesian highest density
+intervals.}
+\end{figure*}
+\efloatseparator
+ 

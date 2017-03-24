@@ -41,30 +41,29 @@ class             : "man"
 output            : papaja::apa6_pdf
 ---
 
+
+```{r}
+# Papaja help
+
+# Papaja GitHub page: https://github.com/crsh/papaja
+# Markdown citation guide: http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html
+```
+
+
+
 ```{r message = FALSE, warning = FALSE}
 library("papaja")
-library(dplyr)
-library(yarrr)
-library(rprojroot)
+library("dplyr")
+library("yarrr")
+library("rprojroot")
 
+# Set working directory to project root
 setwd(rprojroot::is_rstudio_project$find_file())
 
 # Load data
 
 # Participant raw response data
 s1 <- read.table("data/jordan_s1.txt", sep = "\t", header = TRUE, stringsAsFactors = FALSE)
-s2 <- read.table("data/jordan_s2.txt", sep = "\t", header = TRUE, stringsAsFactors = FALSE)
-s3 <- read.table("data/jordan_s3.txt", sep = "\t", header = TRUE, stringsAsFactors = FALSE)
-s4 <- read.table("data/jordan_s4.txt", sep = "\t", header = TRUE, stringsAsFactors = FALSE)
-s5 <- read.table("data/jordan_s5.txt", sep = "\t", header = TRUE, stringsAsFactors = FALSE)
-
-# Open ended question data
-s1.open <- read.table("data/jordan_s1_open.txt", sep = "\t", header = TRUE, quote = "", stringsAsFactors = FALSE)
-s2.open <- read.table("data/jordan_s2_open.txt", sep = "\t", header = TRUE,  quote = "",stringsAsFactors = FALSE)
-s3.open <- read.table("data/jordan_s3_open.txt", sep = "\t", header = TRUE,  quote = "",stringsAsFactors = FALSE)
-s4.open <- read.table("data/jordan_s4_open.txt", sep = "\t", header = TRUE,  quote = "",stringsAsFactors = FALSE)
-s5.open <- read.table("data/jordan_s5_open.txt", sep = "\t", header = TRUE,  quote = "",stringsAsFactors = FALSE)
-
 
 # -------------
 # Data cleaning
@@ -77,23 +76,9 @@ s1 <- s1 %>% mutate(
     filter(percCorrect == 1 & 
            is.finite(age))    # As recommended by the main study author in an email
 
-s2 <- s2 %>% mutate(
-  gender = ifelse(gender == 1, "male", "female"),
-  direct = ifelse(direct == 1, "Direct", "Moral"),
-  signal = ifelse(signal == 1, "Target", "Other")) %>%
-  filter(percCorrect == 1)
+# Helper Functions
 
-s3 <- s3 %>% mutate(
-  gender = ifelse(gender == 1, "male", "female"))
-
-s4 <- s4 %>% mutate(
-  gender = ifelse(gender == 1, "male", "female"))
-
-s5 <- s5 %>% mutate(
-  gender = ifelse(gender == 1, "male", "female"))
-
-
-# A function to extract means and standard deviations from a vector
+# print.meansd: A function to extract means and standard deviations from a vector
 
 print.meansd <- function(x, rounding = 2) {
   
@@ -105,7 +90,10 @@ print.meansd <- function(x, rounding = 2) {
 ```
 
 
-Consider the hypocrite—someone who condemns the moral failings of other people but behaves badly him- or herself. Many commentators have remarked on the “peculiarly repulsive” nature of hypocrisy (Shklar, 1984, p. 57). The degree to which hypocrites are disliked cannot be explained by their transgressions alone: What makes hypocrites especially bad is that they both commit a transgression and condemn it. But why is this combination so objectionable? After all, speaking out against immorality is normally seen as laudable. It enforces norms and encourages moral behavior (Berkowitz & Walker, 1967; Feinberg, Willer, & Schultz, 2014; Feinberg, Willer, Stellar, & Keltner, 2012), such that failing to condemn transgressions has been characterized as secondorder free-riding (Yamagishi, 1986). Arguably, then, people should not be so resentful toward hypocrites: They may fail to achieve their moral aspirations, but at least they oppose bad behavior
+
+
+
+Consider the hypocrite—someone who condemns the moral failings of other people but behaves badly him- or herself. Many commentators have remarked on the “peculiarly repulsive” nature of hypocrisy [@shklar1984ordinary, p. 57]. The degree to which hypocrites are disliked cannot be explained by their transgressions alone: What makes hypocrites especially bad is that they both commit a transgression and condemn it. But why is this combination so objectionable? After all, speaking out against immorality is normally seen as laudable. It enforces norms and encourages moral behavior [@berkowitz1967laws; @feinberg2012virtues; @feinberg2014gossip], such that failing to condemn transgressions has been characterized as secondorder free-riding (Yamagishi, 1986). Arguably, then, people should not be so resentful toward hypocrites: They may fail to achieve their moral aspirations, but at least they oppose bad behavior
 
 
 # Method
