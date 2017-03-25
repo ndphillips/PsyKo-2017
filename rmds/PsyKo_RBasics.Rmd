@@ -43,12 +43,13 @@ To use functions or data from a package, like `yarrr` or `BayesFactor`, you firs
 
 install.packages("yarrr")         # For R piratery
 install.packages("BayesFactor")   # For Bayesian analyses
-install.packages("papaja")        # For APA style results
 install.packages("rprojroot")     # For working directory handling
 install.packages("tidyverse")     # For data wrangling
-install.packages("papaja")        # APA analyses
-install.packages("tm")           # Natural language processing
-
+install.packages("devtools")      # For accessing github
+install.packages("knitr")         # For document creation
+install.packages("rmarkdown")     # For markdown documents
+devtools::install_github("crsh/papaja") # APA analyses
+install.packages("tm")                  # Natural language processing
 ```
 
 
@@ -428,7 +429,7 @@ plot(response.B.bf)
 # Determine simulation parameters
 # --------------------
 
-true.mean <- .5     # The true population mean
+true.mean <- 0     # The true population mean
 true.sd <- 1       # The true population standard deviation
 N <- 10           # The number of samples in each simulation
 sim <- 1000        # Number of simulations

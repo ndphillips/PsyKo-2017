@@ -28,7 +28,8 @@
 # install.packages(wordcloud)      # Creating wordclouds
 # install.packages(stringr)        # Text management functions
 # install.packages(rprojroot)      # For working directory management
-# install.packages(papaja)         # For apa analyses
+# install.packages(devtools)       # To install packages from github
+# devtools::install_github("crsh/papaja")         # For apa analyses
 
 library(yarrr)          # For R piratery
 library(BayesFactor)    # Bayesian analyses

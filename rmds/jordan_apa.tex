@@ -1,4 +1,4 @@
-\documentclass[english,man]{apa6}
+\documentclass[english,pub]{apa6}
 
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
@@ -31,20 +31,21 @@
 \usepackage{threeparttablex}            % Lets threeparttable work with longtable
 
 % Create new environments so endfloat can handle them
-\newenvironment{ltable}
-  {\begin{landscape}\begin{center}\begin{threeparttable}}
-  {\end{threeparttable}\end{center}\end{landscape}}
+% \newenvironment{ltable}
+%   {\begin{landscape}\begin{center}\begin{threeparttable}}
+%   {\end{threeparttable}\end{center}\end{landscape}}
 
 \newenvironment{lltable}
   {\begin{landscape}\begin{center}\begin{ThreePartTable}}
   {\end{ThreePartTable}\end{center}\end{landscape}}
 
-\usepackage{ifthen} % Only add declarations when endfloat package is loaded
-\ifthenelse{\equal{\string man}{\string man}}{%
- \DeclareDelayedFloatFlavor{ThreePartTable}{table} % Make endfloat play with longtable
- \DeclareDelayedFloatFlavor{ltable}{table} % Make endfloat play with lscape
- \DeclareDelayedFloatFlavor{lltable}{table} % Make endfloat play with lscape & longtable
-}{}%
+  \usepackage{ifthen} % Only add declarations when endfloat package is loaded
+  \ifthenelse{\equal{\string pub}{\string man}}{%
+   \DeclareDelayedFloatFlavor{ThreePartTable}{table} % Make endfloat play with longtable
+   % \DeclareDelayedFloatFlavor{ltable}{table} % Make endfloat play with lscape
+   \DeclareDelayedFloatFlavor{lltable}{table} % Make endfloat play with lscape & longtable
+  }{}%
+
 
 
 % The following enables adjusting longtable caption width to table width
@@ -234,7 +235,7 @@ We used R (3.3.2, R Core Team, 2016) and the R-packages
 (0.19.1, Plummer, Best, Cowles, \& Vines, 2006), \emph{dplyr} (0.5.0,
 Wickham \& Francois, 2016), \emph{jpeg} (0.1.8, Urbanek, 2014),
 \emph{Matrix} (1.2.8, Bates \& Maechler, 2017), \emph{papaja}
-(0.1.0.9456, Aust \& Barth, 2016), \emph{rprojroot} (1.2, Müller, 2017),
+(0.1.0.9485, Aust \& Barth, 2016), \emph{rprojroot} (1.2, Müller, 2017),
 and \emph{yarrr} (0.1.4, Phillips, 2017) for all our analyses. Raw data
 are available at the Open Science Framework at
 \url{https://osf.io/pszjz/}

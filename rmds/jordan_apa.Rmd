@@ -1,5 +1,5 @@
 ---
-title             : "Why do we hate hypocrites? "
+title             : "Why do we hate hypocrites?"
 shorttitle        : "Hypocrites"
 
 author: 
@@ -37,7 +37,7 @@ footnotelist      : no
 lineno            : no
 
 lang              : "english"
-class             : "man"
+class             : "pub"
 output            : papaja::apa6_pdf
 ---
 
@@ -52,6 +52,9 @@ output            : papaja::apa6_pdf
 
 
 ```{r message = FALSE, warning = FALSE}
+
+# Load libraries
+
 library("papaja")
 library("dplyr")
 library("yarrr")
@@ -88,7 +91,6 @@ print.meansd <- function(x, rounding = 2) {
   
 }
 ```
-
 
 
 

@@ -127,7 +127,7 @@ $(document).ready(function () {
 <div id="the-survey" class="section level2">
 <h2>The survey</h2>
 <p>For these examples, we’ll load the following data representing psychology study where 150 participants were assigned to one of 3 conditions A, B, and C. For each participant, their response to some measure was recorded, along with their accuracy, and the time of their response. The data are contained in a text file called <code>study.txt</code> at <a href="https://raw.githubusercontent.com/ndphillips/PsyKo-2017/master/data/study.txt" class="uri">https://raw.githubusercontent.com/ndphillips/PsyKo-2017/master/data/study.txt</a></p>
-<p>Here are the first few rows of the data</p>
+<p>Here are the first few rows of the data:</p>
 <table>
 <thead>
 <tr class="header">
@@ -208,8 +208,11 @@ install.packages(&quot;BayesFactor&quot;)   # For Bayesian analyses
 install.packages(&quot;papaja&quot;)        # For APA style results
 install.packages(&quot;rprojroot&quot;)     # For working directory handling
 install.packages(&quot;tidyverse&quot;)     # For data wrangling
-install.packages(&quot;papaja&quot;)        # APA analyses
-install.packages(&quot;tm&quot;)           # Natural language processing</code></pre>
+install.packages(&quot;devtools&quot;)      # For accessing github
+install.packages(&quot;knitr&quot;)         # For document creation
+install.packages(&quot;rmarkdown&quot;)     # For markdown documents
+devtools::install_github(&quot;crsh/papaja&quot;) # APA analyses
+install.packages(&quot;tm&quot;)                  # Natural language processing</code></pre>
 </div>
 <div id="loading-packages" class="section level2">
 <h2>Loading packages</h2>
